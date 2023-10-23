@@ -1,3 +1,4 @@
+// Package explorer provides explorer of the blockchain.
 package explorer
 
 import (
@@ -49,6 +50,7 @@ func handleAdd(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Start starts an explorer at port 4000
 func Start() {
 	templates = template.Must(template.ParseGlob(templateDir + "pages/*.gohtml"))
 	templates = template.Must(templates.ParseGlob(templateDir + "partials/*.gohtml"))

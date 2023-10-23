@@ -1,3 +1,4 @@
+// Package blockchain provides blockchain and functions needed.
 package blockchain
 
 import (
@@ -6,6 +7,7 @@ import (
 	"sync"
 )
 
+// Block represents a single block.
 type Block struct {
 	Data     string
 	Hash     string
@@ -49,6 +51,7 @@ func (b *blockchain) AllBlocks() []*Block {
 	return b.blocks
 }
 
+// GetBlockchain guarantees creating genesis block just once by using singleton pattern and returns the blockchain.
 func GetBlockchain() *blockchain {
 	if b == nil {
 		once.Do(func() {
