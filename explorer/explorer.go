@@ -26,27 +26,27 @@ type addData struct {
 
 var templates *template.Template
 
-func handleHome(w http.ResponseWriter, r *http.Request) {
+func handleHome(rw http.ResponseWriter, r *http.Request) {
 	data := homeData{
 		PageTitle: "Home",
 		Blocks:    blockchain.GetBlockchain().AllBlocks(),
 	}
-	templates.ExecuteTemplate(w, "home", data)
+	templates.ExecuteTemplate(rw, "home", data)
 }
 
-func handleAdd(w http.ResponseWriter, r *http.Request) {
+func handleAdd(rw http.ResponseWriter, r *http.Request) {
 	data := addData{
 		PageTitle: "Add",
 	}
 
 	switch r.Method {
 	case "GET":
-		templates.ExecuteTemplate(w, "add", data)
+		templates.ExecuteTemplate(rw, "add", data)
 	case "POST":
 		r.ParseForm()
 		blockData := r.Form.Get("blockData")
 		blockchain.GetBlockchain().AddBlock(blockData)
-		http.Redirect(w, r, "/", http.StatusMovedPermanently)
+		http.Redirect(rw, r, "/", http.StatusMovedPermanently)
 	}
 }
 
