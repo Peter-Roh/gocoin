@@ -11,7 +11,6 @@ import (
 )
 
 const (
-	port        string = ":4000"
 	templateDir string = "explorer/templates/"
 )
 
@@ -50,13 +49,13 @@ func handleAdd(rw http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Start starts an explorer at port 4000
-func Start() {
+// Start starts an explorer at port
+func Start(port int) {
+	handler := http.NewServeMux()
 	templates = template.Must(template.ParseGlob(templateDir + "pages/*.gohtml"))
 	templates = template.Must(templates.ParseGlob(templateDir + "partials/*.gohtml"))
-	http.HandleFunc("/", handleHome)
-	http.HandleFunc("/add", handleAdd)
-	fmt.Printf("Listening on http://localhost%s...\n", port)
-	log.Fatal(http.ListenAndServe(port, nil))
-
+	handler.HandleFunc("/", handleHome)
+	handler.HandleFunc("/add", handleAdd)
+	fmt.Printf("Listening on http://localhost:%d...\n", port)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), handler))
 }
