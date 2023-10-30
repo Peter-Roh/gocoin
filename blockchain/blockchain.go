@@ -3,15 +3,17 @@ package blockchain
 
 import (
 	"crypto/sha256"
+	"errors"
 	"fmt"
 	"sync"
 )
 
 // Block represents a single block.
 type Block struct {
-	Data     string
-	Hash     string
-	PrevHash string
+	Data     string `json:"data"`
+	Hash     string `json:"hash"`
+	PrevHash string `json:"prevHash,omitempty"`
+	Height   int    `json:"height"`
 }
 
 type blockchain struct {
@@ -38,6 +40,7 @@ func createBlock(data string) *Block {
 		Data:     data,
 		Hash:     "",
 		PrevHash: getPrevHash(),
+		Height:   len(GetBlockchain().blocks) + 1,
 	}
 	newBlock.calculateHash()
 	return &newBlock
@@ -49,6 +52,15 @@ func (b *blockchain) AddBlock(data string) {
 
 func (b *blockchain) AllBlocks() []*Block {
 	return b.blocks
+}
+
+var ErrNotFound = errors.New("block not found")
+
+func (b *blockchain) GetBlock(height int) (*Block, error) {
+	if height > len(b.blocks) {
+		return nil, ErrNotFound
+	}
+	return b.blocks[height-1], nil
 }
 
 // GetBlockchain guarantees creating genesis block just once by using singleton pattern and returns the blockchain.
