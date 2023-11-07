@@ -1,7 +1,9 @@
 package main
 
-import "github.com/Peter-Roh/gocoin/cli"
+import "github.com/Peter-Roh/gocoin/blockchain"
 
 func main() {
-	cli.Start()
+	blockchain.Blockchain().AddBlock("Second")
+	blockchain.Blockchain().AddBlock("Third")
+	blockchain.Blockchain().AddBlock("Fourth")
 }
