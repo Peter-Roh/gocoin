@@ -16,6 +16,10 @@ type blockchain struct {
 var b *blockchain
 var once sync.Once
 
+func (b *blockchain) restore(data []byte) {
+	utils.FromBytes(b, data)
+}
+
 func (b *blockchain) persist() {
 	db.SaveBlockchain(utils.ToBytes(b))
 }
@@ -27,6 +31,22 @@ func (b *blockchain) AddBlock(data string) {
 	b.persist()
 }
 
+func (b *blockchain) Blocks() []*Block {
+	var blocks []*Block
+	hashCursor := b.NewestHash
+	for {
+		block, _ := FindBlock(hashCursor)
+		blocks = append(blocks, block)
+		if block.PrevHash != "" {
+			hashCursor = block.PrevHash
+		} else {
+			break
+		}
+	}
+
+	return blocks
+}
+
 // Blockchain guarantees creating genesis block just once by using singleton pattern and returns the blockchain.
 func Blockchain() *blockchain {
 	if b == nil {
@@ -35,7 +55,12 @@ func Blockchain() *blockchain {
 				NewestHash: "",
 				Height:     0,
 			}
-			b.AddBlock("The Times 03/Jan/2009 Chancellor on brink of second bailout for banks.")
+			persisted := db.Blockchain()
+			if persisted == nil {
+				b.AddBlock("The Times 03/Jan/2009 Chancellor on brink of second bailout for banks.")
+			} else {
+				b.restore(persisted)
+			}
 		})
 	}
 	return b
