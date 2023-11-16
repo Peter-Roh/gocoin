@@ -28,7 +28,7 @@ var templates *template.Template
 func handleHome(rw http.ResponseWriter, r *http.Request) {
 	data := homeData{
 		PageTitle: "Home",
-		Blocks:    blockchain.Blockchain().Blocks(),
+		Blocks:    blockchain.Blocks(blockchain.Blockchain()),
 	}
 	templates.ExecuteTemplate(rw, "home", data)
 }
@@ -42,9 +42,7 @@ func handleAdd(rw http.ResponseWriter, r *http.Request) {
 	case "GET":
 		templates.ExecuteTemplate(rw, "add", data)
 	case "POST":
-		r.ParseForm()
-		blockData := r.Form.Get("blockData")
-		blockchain.Blockchain().AddBlock(blockData)
+		blockchain.Blockchain().AddBlock()
 		http.Redirect(rw, r, "/", http.StatusMovedPermanently)
 	}
 }
