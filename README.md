@@ -15,3 +15,7 @@ Learning about Golang and Blockchain by making Cryptocurrency proof of concept
 - HTML Explorer
 
 - P2P (Websockets)
+
+## References
+
+- https://nomadcoders.co/nomadcoin
